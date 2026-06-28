@@ -388,6 +388,58 @@
       margin-top: 1px;
     }
 
+    /* ═══ WeChat QR & Copy ═══ */
+    .wechat-contact { position: relative; }
+    .wechat-value-row { display: flex; align-items: center; gap: 8px; }
+    .wechat-copy {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); padding: 2px;
+      display: flex; align-items: center;
+      transition: color 0.2s;
+    }
+    .wechat-copy:hover { color: var(--text); }
+    .wechat-qr-popup {
+      position: absolute;
+      left: 50%; top: 100%;
+      transform: translateX(-50%) translateY(0);
+      margin-top: 8px;
+      padding: 10px;
+      background: var(--surface);
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 10;
+    }
+    .wechat-contact:hover .wechat-qr-popup {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(-4px);
+    }
+    .wechat-qr-popup img {
+      width: 160px; height: 160px;
+      display: block;
+    }
+    .copy-toast {
+      position: fixed;
+      bottom: 40px; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: #1d1d1f;
+      color: #f5f5f7;
+      padding: 8px 20px;
+      border-radius: 980px;
+      font-size: 13px;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .copy-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
     /* ═══ Now ═══ */
     .now-card {
       max-width: 600px;
@@ -806,22 +858,38 @@
               <div class="contact-item-value">dickwhy@foxmail.com</div>
             </div>
           </a>
-          <div class="contact-item fade-up delay-2" data-lang="zh">
+          <div class="contact-item wechat-contact fade-up delay-2" data-lang="zh">
             <div class="contact-item-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             </div>
             <div>
               <div class="contact-item-label">WeChat</div>
-              <div class="contact-item-value">doujie1024</div>
+              <div class="wechat-value-row">
+                <div class="contact-item-value">dickdou</div>
+                <button class="wechat-copy" onclick="copyWechat()" aria-label="复制微信号">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="wechat-qr-popup">
+              <img src="blog/images/wechat-qr.png" alt="WeChat QR" />
             </div>
           </div>
-          <div class="contact-item fade-up delay-2" data-lang="en">
+          <div class="contact-item wechat-contact fade-up delay-2" data-lang="en">
             <div class="contact-item-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
             </div>
             <div>
               <div class="contact-item-label">WeChat</div>
-              <div class="contact-item-value">doujie1024</div>
+              <div class="wechat-value-row">
+                <div class="contact-item-value">dickdou</div>
+                <button class="wechat-copy" onclick="copyWechat()" aria-label="Copy WeChat ID">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="wechat-qr-popup">
+              <img src="blog/images/wechat-qr.png" alt="WeChat QR" />
             </div>
           </div>
           <a href="https://github.com/doujie" target="_blank" rel="noopener" class="contact-item fade-up delay-2">
@@ -887,6 +955,17 @@
         if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 56, behavior: 'smooth' });
       });
     });
+
+    function copyWechat() {
+      navigator.clipboard.writeText('dickdou').then(() => {
+        const toast = document.getElementById('copyToast');
+        toast.textContent = lang === 'zh' ? '已复制微信号' : 'WeChat ID copied';
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1800);
+      });
+    }
   </script>
+
+  <div class="copy-toast" id="copyToast"></div>
 </body>
 </html>
