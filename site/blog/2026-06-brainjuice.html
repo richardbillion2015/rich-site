@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibecoding有感：网站只是载体，真正重要的是你脑子里到底装着什么 — Rich · 豆子</title>
+  <meta name="theme-color" content="#f8f8fa">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>R</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8f8fa;
+      --surface: #ffffff;
+      --text: #1d1d1f;
+      --text2: #515157;
+      --muted: #8e8e93;
+      --line: rgba(0,0,0,0.07);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --font-display: 'Playfair Display', 'Noto Serif SC', 'Songti SC', 'STSong', Georgia, serif;
+      --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      --card-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .bg-dots {
+      position: fixed; inset: 0; z-index: -1;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.035) 0.7px, transparent 0.7px);
+      background-size: 22px 22px; pointer-events: none;
+    }
+    ::selection { background: rgba(99,102,241,0.15); }
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(248,248,250,0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid rgba(0,0,0,0.06);
+    }
+    header nav {
+      max-width: 720px; margin: 0 auto; padding: 0 40px;
+      height: 48px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--font-display); font-size: 20px; font-weight: 600;
+      letter-spacing: -0.02em; color: var(--text); text-decoration: none;
+    }
+    .back-link {
+      font-size: 12px; color: var(--muted); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 14px; border-radius: 980px;
+      border: 1px solid rgba(0,0,0,0.1);
+      transition: all 0.2s;
+    }
+    .back-link:hover { color: var(--text); border-color: rgba(0,0,0,0.25); }
+    .article {
+      max-width: 720px; margin: 0 auto; padding: 100px 40px 80px;
+    }
+    .article-meta {
+      font-size: 12px; color: var(--muted); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .article h1 {
+      font-family: var(--font-display); font-size: 34px; font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1.25; margin-bottom: 44px;
+    }
+    .content { font-size: 16px; line-height: 1.8; color: var(--text); }
+    .content h1 { font-family: var(--font-display); font-size: 28px; font-weight: 700; margin: 48px 0 20px; letter-spacing: -0.02em; }
+    .content h2 { font-family: var(--font-display); font-size: 24px; font-weight: 600; margin: 40px 0 16px; letter-spacing: -0.02em; }
+    .content h3 { font-family: var(--font-display); font-size: 20px; font-weight: 600; margin: 32px 0 12px; letter-spacing: -0.01em; }
+    .content h4, .content h5 { font-size: 17px; font-weight: 600; margin: 24px 0 8px; }
+    .content p { margin-bottom: 16px; }
+    .content ul, .content ol { margin-bottom: 16px; padding-left: 24px; }
+    .content li { margin-bottom: 6px; }
+    .content strong { font-weight: 600; }
+    .content blockquote {
+      border-left: 3px solid var(--line); padding-left: 16px;
+      margin: 16px 0; color: var(--text2); font-size: 15px;
+    }
+    .content figure {
+      margin: 24px 0; padding: 0;
+    }
+    .content figure img {
+      max-width: 100%; height: auto; border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      display: block;
+    }
+    .content a { color: var(--accent); text-decoration: none; }
+    .content a:hover { text-decoration: underline; }
+    .content hr { border: none; border-top: 1px solid var(--line); margin: 32px 0; }
+    .article-footer {
+      margin-top: 64px; padding-top: 28px;
+      border-top: 1px solid var(--line);
+      display: flex; justify-content: center; gap: 12px;
+    }
+    .article-footer a {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 22px; border-radius: 980px;
+      font-size: 13px; font-weight: 400;
+      text-decoration: none; color: var(--text);
+      background: rgba(0,0,0,0.04);
+      transition: all 0.25s ease;
+    }
+    .article-footer a:hover {
+      background: rgba(0,0,0,0.07);
+      transform: translateY(-1px);
+      box-shadow: var(--card-shadow);
+    }
+    footer {
+      padding: 28px 0; text-align: center;
+      font-size: 12px; color: var(--muted);
+      border-top: 1px solid var(--line);
+      max-width: 720px; margin: 40px auto 0;
+    }
+    @media (max-width: 768px) {
+      .article { padding: 80px 24px 60px; }
+      .article h1 { font-size: 26px; }
+      .content h3 { font-size: 18px; }
+      header nav { padding: 0 24px; }
+      .article-footer { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-dots" aria-hidden="true"></div>
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-brand">Rich</a>
+      <a href="../index.html#thinking" class="back-link">&larr; Writing</a>
+    </nav>
+  </header>
+  <article class="article">
+    <div class="article-meta">
+      <span class="date">2026.06</span>
+      <span class="tags">Vibecoding · AI · 个人品牌 · 工作坊</span>
+    </div>
+    <div class="content">
+<p>今天参加阿里云 &times; Intel &times; SoloNest 的「一人公司 AI 实战工作坊」</p>
+
+<figure><img alt="工作坊现场分享" src="../blog/images/img-40-workshop-presentation.jpg" /></figure>
+
+<p>我的预期重点是怎么做网站；but，我发现最难的不是技术，而是：</p>
+
+<p><strong>「我是谁，我在做什么，你为什么要认识我？」</strong></p>
+
+<p>因为现在做网站门槛真的太低了。</p>
+
+<p>以前还要学CSS、wordpress、配置服务器域名部署&hellip;今天我现场2小时就搓完了自己的主页（欢迎访问我的主页见最后一张图）</p>
+
+<figure><img alt="现场coding" src="../blog/images/img-41-workshop-coding.jpg" /></figure>
+
+<p>反而真正难的是内容。</p>
+
+<p>当我开始做个人网站的时候，我会被迫去回答：</p>
+
+<ul>
+<li>我想做啥？</li>
+<li>我能给你提供啥？</li>
+<li>你为啥来找我而不是别人？</li>
+</ul>
+
+<p>我原来一直觉得工具重要，但是AI时代我反而觉得：</p>
+
+<p><strong>内容比工具重要得多。</strong></p>
+
+<p>因为 AI 会让「做出来」越来越容易，但人与人的差距，可能会越来越体现在想法、经历和持续输出的内容上。</p>
+
+<figure><img alt="合影" src="../blog/images/img-42-workshop-group-photo.jpg" /></figure>
+    </div>
+    <div class="article-footer">
+      <a href="../index.html#thinking">&larr; 所有文章</a>
+      <a href="../index.html">首页</a>
+    </div>
+  </article>
+  <footer><p>&copy; 2026 Rich</p></footer>
+</body>
+</html>
