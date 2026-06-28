@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rich · 豆子</title>
+  <meta name="description" content="Rich — Product manager, AI builder, writer. 10 years of building complex systems, now creating my own.">
+  <meta name="theme-color" content="#141416">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>R</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8f8fa;
+      --surface: #ffffff;
+      --text: #1d1d1f;
+      --text2: #515157;
+      --muted: #8e8e93;
+      --line: rgba(0,0,0,0.07);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --font-display: 'Playfair Display', 'Noto Serif SC', 'Songti SC', 'STSong', Georgia, serif;
+      --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      --card-shadow: 0 4px 24px rgba(0,0,0,0.04);
+      --card-shadow-hover: 0 12px 40px rgba(0,0,0,0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ═══ Animated Background ═══ */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background-color: var(--bg);
+      animation: meshDrift 25s ease-in-out infinite alternate;
+    }
+    @keyframes meshDrift {
+      0% {
+        background:
+          radial-gradient(ellipse 60% 50% at 15% 45%, rgba(99,102,241,0.055) 0%, transparent 65%),
+          radial-gradient(ellipse 55% 55% at 80% 15%, rgba(59,130,246,0.045) 0%, transparent 60%),
+          radial-gradient(ellipse 65% 45% at 55% 85%, rgba(139,92,246,0.04) 0%, transparent 60%),
+          radial-gradient(ellipse 50% 50% at 90% 70%, rgba(14,165,233,0.035) 0%, transparent 55%);
+        background-color: var(--bg);
+      }
+      50% {
+        background:
+          radial-gradient(ellipse 55% 55% at 75% 55%, rgba(139,92,246,0.05) 0%, transparent 60%),
+          radial-gradient(ellipse 60% 50% at 20% 80%, rgba(59,130,246,0.045) 0%, transparent 65%),
+          radial-gradient(ellipse 50% 60% at 85% 25%, rgba(99,102,241,0.04) 0%, transparent 55%),
+          radial-gradient(ellipse 65% 45% at 35% 15%, rgba(14,165,233,0.04) 0%, transparent 60%);
+        background-color: var(--bg);
+      }
+      100% {
+        background:
+          radial-gradient(ellipse 65% 45% at 50% 30%, rgba(59,130,246,0.05) 0%, transparent 60%),
+          radial-gradient(ellipse 50% 60% at 10% 65%, rgba(139,92,246,0.045) 0%, transparent 55%),
+          radial-gradient(ellipse 55% 50% at 90% 80%, rgba(99,102,241,0.04) 0%, transparent 65%),
+          radial-gradient(ellipse 60% 55% at 40% 10%, rgba(14,165,233,0.04) 0%, transparent 60%);
+        background-color: var(--bg);
+      }
+    }
+    .bg-dots {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.035) 0.7px, transparent 0.7px);
+      background-size: 22px 22px;
+      pointer-events: none;
+    }
+
+    ::selection { background: rgba(99,102,241,0.15); }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ═══ Header ═══ */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(248,248,250,0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid rgba(0,0,0,0.06);
+    }
+    header nav {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 40px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .nav-links { display: flex; gap: 22px; }
+    .nav-links a {
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .lang-btn {
+      font-size: 11px;
+      color: var(--text2);
+      cursor: pointer;
+      padding: 3px 10px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 980px;
+      background: transparent;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .lang-btn:hover { color: var(--text); border-color: rgba(0,0,0,0.25); }
+
+    /* ═══ Hero ═══ */
+    .hero {
+      position: relative;
+      padding: 130px 0 80px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 520px;
+      height: 520px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        rgba(99,102,241,0.06),
+        rgba(59,130,246,0.05),
+        rgba(139,92,246,0.06),
+        rgba(14,165,233,0.04),
+        rgba(99,102,241,0.06)
+      );
+      filter: blur(55px);
+      pointer-events: none;
+      animation: glowSpin 30s linear infinite;
+    }
+    @keyframes glowSpin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to   { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: 112px;
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      line-height: 1.05;
+      background: linear-gradient(135deg, #1d1d1f 0%, #3a3a3c 50%, #1d1d1f 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+    }
+    .hero-name-cn {
+      font-size: 24px;
+      color: var(--text2);
+      margin-top: 6px;
+      font-weight: 400;
+      letter-spacing: 0.35em;
+    }
+    .hero-tagline {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 28px;
+      line-height: 1.4;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+    .hero-nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 36px;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-nav a {
+      display: block;
+      padding: 14px 8px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+    .hero-nav a:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow);
+      background: #f5f5f7;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 11px 24px;
+      border-radius: 980px;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      font-family: inherit;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: scale(1.02);
+      box-shadow: 0 8px 24px rgba(99,102,241,0.25);
+    }
+    .btn-ghost { background: rgba(0,0,0,0.04); color: var(--text); }
+    .btn-ghost:hover { background: rgba(0,0,0,0.07); }
+
+    /* ═══ Sections ═══ */
+    .section {
+      padding: 64px 0;
+      position: relative;
+    }
+    .section-dark {
+      background: linear-gradient(180deg, #141416 0%, #1c1c1e 100%);
+      color: #f5f5f7;
+    }
+    .section-dark .section-subtitle { color: #86868b; }
+    .section-dark .label { color: rgba(255,255,255,0.35); }
+    .section-header {
+      text-align: center;
+      margin-bottom: 44px;
+    }
+    .label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .label::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #c7c7cc;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: inherit;
+    }
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--text2);
+      margin-top: 8px;
+    }
+
+    /* ═══ About (dark) ═══ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .about-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: all 0.3s ease;
+    }
+    .about-card:hover {
+      background: rgba(255,255,255,0.07);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .about-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 18px;
+      color: #86868b;
+      transition: all 0.3s ease;
+    }
+    .about-card:hover .about-icon {
+      background: rgba(99,102,241,0.15);
+      color: #a5b4fc;
+    }
+    .about-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .about-text {
+      font-size: 15px;
+      color: #a1a1a6;
+      line-height: 1.7;
+    }
+
+    /* ═══ Contact ═══ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--text);
+      transition: all 0.25s;
+    }
+    .contact-item:hover {
+      background: #f5f5f7;
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow);
+    }
+    .contact-item-icon {
+      width: 28px; height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+    .contact-item-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .contact-item-value {
+      font-size: 14px;
+      color: var(--text);
+      margin-top: 1px;
+    }
+
+    /* ═══ Now ═══ */
+    .now-card {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 32px;
+      box-shadow: var(--card-shadow);
+    }
+    .now-card-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+    }
+    .progress-track {
+      height: 6px;
+      background: #f0f0f2;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, #6366f1, #06b6d4);
+      transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .progress-summary {
+      margin-top: 12px;
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .now-items {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+    .now-row { padding: 12px 0; }
+    .now-row + .now-row { border-top: 1px solid var(--line); }
+    .now-row-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .now-row-desc {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ═══ Thinking ═══ */
+    .article-list { max-width: 640px; margin: 0 auto; }
+    a.article-card { text-decoration: none; color: inherit; }
+    .article-card {
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      transition: padding-left 0.25s ease;
+    }
+    .article-card:first-child { padding-top: 0; }
+    .article-card:last-child { border-bottom: none; }
+    .article-card:hover { padding-left: 10px; }
+    .article-title {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.35;
+    }
+    .article-tags {
+      margin-top: 5px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .article-date {
+      font-size: 13px;
+      color: var(--muted);
+      flex-shrink: 0;
+      padding-top: 3px;
+      font-variant-numeric: tabular-nums;
+    }
+    .thinking-note {
+      max-width: 640px;
+      margin: 20px auto 0;
+      padding: 18px 22px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+
+    /* ═══ Building ═══ */
+    .build-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .build-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: all 0.3s ease;
+    }
+    .build-card:hover {
+      box-shadow: var(--card-shadow-hover);
+      transform: translateY(-4px);
+    }
+    .build-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .build-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 12px;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .build-desc {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.65;
+    }
+
+    /* ═══ Footer ═══ */
+    footer {
+      padding: 28px 0;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    /* ═══ Animations ═══ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.06s; }
+    .delay-2 { transition-delay: 0.12s; }
+    .delay-3 { transition-delay: 0.18s; }
+
+    /* ═══ Bilingual ═══ */
+    [data-lang="en"] { display: none; }
+    body.lang-en [data-lang="en"] { display: block; }
+    body.lang-en [data-lang="zh"] { display: none; }
+    body.lang-en .contact-item[data-lang="en"] { display: flex; }
+    body.lang-en .article-card[data-lang="en"] { display: flex; }
+    body.lang-en .now-row[data-lang="en"] { display: block; }
+    body.lang-en span[data-lang="en"] { display: inline; }
+    body.lang-en span[data-lang="zh"] { display: none; }
+    span[data-lang="en"] { display: none; }
+
+    /* ═══ Responsive ═══ */
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+      header nav { padding: 0 24px; }
+      .hero { padding: 100px 0 56px; }
+      .hero-name { font-size: 72px; }
+      .hero-name-cn { font-size: 18px; }
+      .hero-tagline { font-size: 13px; }
+      .section { padding: 48px 0; }
+      .section-title { font-size: 30px; }
+      .section-header { margin-bottom: 32px; }
+      .about-grid { grid-template-columns: 1fr; gap: 12px; }
+      .build-grid { grid-template-columns: 1fr; gap: 12px; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .now-card { padding: 24px; }
+      .hero-nav { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-mesh" aria-hidden="true"></div>
+  <div class="bg-dots" aria-hidden="true"></div>
+
+  <header>
+    <nav>
+      <div class="nav-brand">Rich</div>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="#about"><span data-lang="zh">关于</span><span data-lang="en">About</span></a>
+          <a href="#now">Now</a>
+          <a href="#thinking"><span data-lang="zh">思考</span><span data-lang="en">Writing</span></a>
+          <a href="#building"><span data-lang="zh">项目</span><span data-lang="en">Building</span></a>
+        </div>
+        <button class="lang-btn" id="langBtn" aria-label="Switch language">EN</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-glow"></div>
+      <div class="container">
+        <div class="hero-name fade-up">Rich</div>
+        <div class="hero-name-cn fade-up delay-1">豆 子</div>
+        <div class="hero-tagline fade-up delay-2" data-lang="zh">产品十年 / AI 构建者 / 用自律重建生活秩序</div>
+        <div class="hero-tagline fade-up delay-2" data-lang="en">10yr Product Lead / AI Builder / Rebuilding Life with Code</div>
+        <div class="hero-nav fade-up delay-3">
+          <a href="#building"><span data-lang="zh">项目</span><span data-lang="en">Building</span></a>
+          <a href="#thinking"><span data-lang="zh">思考</span><span data-lang="en">Writing</span></a>
+          <a href="#about"><span data-lang="zh">关于</span><span data-lang="en">About</span></a>
+          <a href="#contact"><span data-lang="zh">联系我</span><span data-lang="en">Contact</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Building -->
+    <section class="section" id="building">
+      <div class="container">
+        <div class="section-header fade-up">
+          <div class="label">Building</div>
+          <h2 class="section-title" data-lang="zh">我在做什么</h2>
+          <h2 class="section-title" data-lang="en">What I'm Building</h2>
+        </div>
+        <div class="build-grid">
+          <div class="build-card fade-up delay-1">
+            <div class="build-tag" data-lang="zh">进行中 · 健康</div>
+            <div class="build-tag" data-lang="en">In Progress · Health</div>
+            <div class="build-title" data-lang="zh">健康减脂实验</div>
+            <div class="build-title" data-lang="en">Weight Loss Experiment</div>
+            <p class="build-desc" data-lang="zh">95 → 75 kg 的完整记录。训练、饮食、睡眠全链路数据化，沉淀成可复制的方法论。</p>
+            <p class="build-desc" data-lang="en">Full journey from 95 to 75 kg. Tracking training, diet, and sleep to build a replicable methodology.</p>
+          </div>
+          <div class="build-card fade-up delay-2">
+            <div class="build-tag" data-lang="zh">探索中 · AI</div>
+            <div class="build-tag" data-lang="en">Exploring · AI</div>
+            <div class="build-title" data-lang="zh">AI 产品原型</div>
+            <div class="build-title" data-lang="en">AI Product Prototypes</div>
+            <p class="build-desc" data-lang="zh">用 AI 工具链跑通从想法到上线的完整闭环。学全栈，攒经验，做真正的产品。</p>
+            <p class="build-desc" data-lang="en">Running the full loop from idea to deployment with AI toolchains. Learning full-stack, gaining experience, shipping real products.</p>
+          </div>
+          <div class="build-card fade-up delay-3">
+            <div class="build-tag" data-lang="zh">长期 · 系统</div>
+            <div class="build-tag" data-lang="en">Long-term · System</div>
+            <div class="build-title">Personal OS</div>
+            <p class="build-desc" data-lang="zh">健康、财务、时间、心理的个人管理工具箱。从自己的需求出发，逐步构建。</p>
+            <p class="build-desc" data-lang="en">A personal management toolkit for health, finance, time, and mental health. Built gradually from real needs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Now -->
+    <section class="section" id="now">
+      <div class="container">
+        <div class="section-header fade-up">
+          <div class="label">Now</div>
+          <h2 class="section-title" data-lang="zh">我此刻在做的事</h2>
+          <h2 class="section-title" data-lang="en">What I'm Doing Now</h2>
+        </div>
+        <div class="now-card fade-up">
+          <div class="now-card-title" data-lang="zh">减脂进度</div>
+          <div class="now-card-title" data-lang="en">Weight Loss Progress</div>
+          <div class="progress-track">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+          </div>
+          <div class="progress-labels">
+            <span>95 kg</span>
+            <span data-lang="zh">目标 75 kg</span>
+            <span data-lang="en">Goal 75 kg</span>
+          </div>
+          <div class="progress-summary" data-lang="zh">当前 85 kg · 已减 10 kg · 还剩 10 kg · 计划 2 个月内完成</div>
+          <div class="progress-summary" data-lang="en">Currently 85 kg · Lost 10 kg · 10 kg remaining · Target: 2 months</div>
+          <div class="now-items">
+            <div class="now-row">
+              <div class="now-row-title" data-lang="zh">AI 全栈开发</div>
+              <div class="now-row-title" data-lang="en">AI Full-Stack Development</div>
+              <div class="now-row-desc" data-lang="zh">从零学习全栈开发，用 AI 工具链完成从想法到上线的闭环。</div>
+              <div class="now-row-desc" data-lang="en">Learning full-stack from scratch, using AI toolchains to ship ideas end-to-end.</div>
+            </div>
+            <div class="now-row">
+              <div class="now-row-title" data-lang="zh">寻找新节奏</div>
+              <div class="now-row-title" data-lang="en">Finding New Rhythm</div>
+              <div class="now-row-desc" data-lang="zh">在独立开发、远程工作和上海生活之间找到平衡点。</div>
+              <div class="now-row-desc" data-lang="en">Balancing indie development, remote work, and life in Shanghai.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Thinking -->
+    <section class="section" id="thinking">
+      <div class="container">
+        <div class="section-header fade-up">
+          <div class="label">Writing</div>
+          <h2 class="section-title" data-lang="zh">我在想什么</h2>
+          <h2 class="section-title" data-lang="en">What I'm Thinking About</h2>
+        </div>
+        <div class="article-list fade-up">
+          <a class="article-card" href="blog/2026-06-brainjuice.html">
+            <div>
+              <div class="article-title">允许灰度的亲密关系更勇敢</div>
+              <div class="article-tags">亲密关系 · 安全感 · 感情观</div>
+            </div>
+            <div class="article-date">2026.06</div>
+          </a>
+          <a class="article-card" href="blog/metaverse-thinking.html">
+            <div>
+              <div class="article-title">我对元宇宙的定义与思考</div>
+              <div class="article-tags">元宇宙 · 产品思考 · Web3</div>
+            </div>
+            <div class="article-date">2022.10</div>
+          </a>
+          <a class="article-card" href="blog/2022-10-brainjuice.html">
+            <div>
+              <div class="article-title">AIGC、四天工作制与自治萌芽</div>
+              <div class="article-tags">AI · 工作方式 · 社会观察</div>
+            </div>
+            <div class="article-date">2022.10</div>
+          </a>
+          <a class="article-card" href="blog/2022-09-brainjuice.html">
+            <div>
+              <div class="article-title">拼多多的第一性原理与沧海桑田的二元思维</div>
+              <div class="article-tags">产品洞察 · 思维模型 · 社会观察</div>
+            </div>
+            <div class="article-date">2022.09</div>
+          </a>
+          <a class="article-card" href="blog/2022-08-brainjuice.html">
+            <div>
+              <div class="article-title">区块链研究、人口结构与幸福感</div>
+              <div class="article-tags">区块链 · 人口 · 冥想 · 习惯</div>
+            </div>
+            <div class="article-date">2022.08</div>
+          </a>
+          <a class="article-card" href="blog/2022-07-brainjuice.html">
+            <div>
+              <div class="article-title">AI 绘画、习惯养成与积分通胀</div>
+              <div class="article-tags">AI · 产品设计 · 习惯 · 经济思维</div>
+            </div>
+            <div class="article-date">2022.07</div>
+          </a>
+        </div>
+        <div class="thinking-note fade-up" data-lang="zh">以上内容来自本地 Markdown 文件，从飞书知识库「个人脑汁」导出。持续记录产品、AI、健康和个人系统的思考。</div>
+        <div class="thinking-note fade-up" data-lang="en">Sourced from local Markdown files, exported from my Feishu wiki. Ongoing notes on products, AI, health, and personal systems.</div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section section-dark" id="about">
+      <div class="container">
+        <div class="section-header fade-up">
+          <div class="label">About</div>
+          <h2 class="section-title" data-lang="zh">关于我</h2>
+          <h2 class="section-title" data-lang="en">About Me</h2>
+          <p class="section-subtitle" data-lang="zh">不是简历，是快速理解我的入口</p>
+          <p class="section-subtitle" data-lang="en">Not a resume — a quick way to know me</p>
+        </div>
+        <div class="about-grid">
+          <div class="about-card fade-up delay-1">
+            <div class="about-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+            </div>
+            <div class="about-label" data-lang="zh">做过</div>
+            <div class="about-label" data-lang="en">Done</div>
+            <p class="about-text" data-lang="zh">网易、阿里、字节、携程。会员、增长、AI 产品、交易。在复杂业务里搭系统、找杠杆、推落地。</p>
+            <p class="about-text" data-lang="en">NetEase, Alibaba, ByteDance, Trip.com. Membership, growth, AI products, transactions. Building systems and finding leverage in complex businesses.</p>
+          </div>
+          <div class="about-card fade-up delay-2">
+            <div class="about-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            </div>
+            <div class="about-label" data-lang="zh">在做</div>
+            <div class="about-label" data-lang="en">Doing</div>
+            <p class="about-text" data-lang="zh">离职后开始独立探索。用 AI 做产品、管理健康、搭建个人系统，保持长期写作。</p>
+            <p class="about-text" data-lang="en">Now exploring independently. Building products with AI, managing health, creating personal systems, and writing consistently.</p>
+          </div>
+          <div class="about-card fade-up delay-3">
+            <div class="about-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 1 4 12.9V17H8v-2.1A7 7 0 0 1 12 2z"/></svg>
+            </div>
+            <div class="about-label" data-lang="zh">相信</div>
+            <div class="about-label" data-lang="en">Believe</div>
+            <p class="about-text" data-lang="zh">个人竞争力 = AI 工具链 × 个人系统 × 持续表达 × 可被信任的作品。</p>
+            <p class="about-text" data-lang="en">Competitiveness = AI toolchain × Personal systems × Consistent expression × Trustworthy work.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section" id="contact">
+      <div class="container">
+        <div class="section-header fade-up">
+          <div class="label">Contact</div>
+          <h2 class="section-title" data-lang="zh">找到我</h2>
+          <h2 class="section-title" data-lang="en">Get in Touch</h2>
+        </div>
+        <div class="contact-grid">
+          <a href="mailto:dickwhy@foxmail.com" class="contact-item fade-up delay-1">
+            <div class="contact-item-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            </div>
+            <div>
+              <div class="contact-item-label">Email</div>
+              <div class="contact-item-value">dickwhy@foxmail.com</div>
+            </div>
+          </a>
+          <div class="contact-item fade-up delay-2" data-lang="zh">
+            <div class="contact-item-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div>
+              <div class="contact-item-label">WeChat</div>
+              <div class="contact-item-value">doujie1024</div>
+            </div>
+          </div>
+          <div class="contact-item fade-up delay-2" data-lang="en">
+            <div class="contact-item-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div>
+              <div class="contact-item-label">WeChat</div>
+              <div class="contact-item-value">doujie1024</div>
+            </div>
+          </div>
+          <a href="https://github.com/doujie" target="_blank" rel="noopener" class="contact-item fade-up delay-2">
+            <div class="contact-item-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            </div>
+            <div>
+              <div class="contact-item-label">GitHub</div>
+              <div class="contact-item-value">@doujie</div>
+            </div>
+          </a>
+          <a href="https://x.com/doujie" target="_blank" rel="noopener" class="contact-item fade-up delay-3">
+            <div class="contact-item-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733-16z"/><path d="M4 20l6.768-6.768m2.46-2.46L20 4"/></svg>
+            </div>
+            <div>
+              <div class="contact-item-label">X / Twitter</div>
+              <div class="contact-item-value">@doujie</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Rich · <span data-lang="zh">用代码和思考构建自己的互联网阵地</span><span data-lang="en">Building my corner of the internet with code and words</span></p>
+    </div>
+  </footer>
+
+  <script>
+    const langBtn = document.getElementById('langBtn');
+    let lang = 'zh';
+    function setLang(l) {
+      lang = l;
+      document.body.classList.toggle('lang-en', l === 'en');
+      document.documentElement.lang = l === 'en' ? 'en' : 'zh-CN';
+      langBtn.textContent = l === 'en' ? '中文' : 'EN';
+    }
+    langBtn.addEventListener('click', () => setLang(lang === 'zh' ? 'en' : 'zh'));
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+    const pb = document.getElementById('progressBar');
+    const pbIO = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { setTimeout(() => { pb.style.width = '50%'; }, 300); pbIO.unobserve(e.target); }
+      });
+    }, { threshold: 0.3 });
+    pbIO.observe(pb.parentElement);
+
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const el = document.querySelector(a.getAttribute('href'));
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 56, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
