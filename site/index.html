@@ -503,6 +503,20 @@
     /* ═══ Thinking ═══ */
     .article-list { max-width: 640px; margin: 0 auto; }
     a.article-card { text-decoration: none; color: inherit; }
+    .note-badge {
+      display: inline-block;
+      font-size: 10px;
+      color: var(--accent);
+      background: rgba(99,102,241,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      margin-right: 8px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
     .article-card {
       padding: 22px 0;
       border-bottom: 1px solid var(--line);
@@ -757,6 +771,13 @@
           <h2 class="section-title" data-lang="en">What I'm Thinking About</h2>
         </div>
         <div class="article-list fade-up">
+          <a class="article-card" href="note/no-code-website.html">
+            <div>
+              <div class="article-title"><span class="note-badge">NOTE</span>不会写代码，也能 2 小时做出个人网站</div>
+              <div class="article-tags">AI · 个人网站 · 教程 · Personal Branding</div>
+            </div>
+            <div class="article-date">2026.06</div>
+          </a>
           <a class="article-card" href="blog/2026-06-brainjuice.html">
             <div>
               <div class="article-title">Vibecoding有感：网站只是载体，真正重要的是你脑子里到底装着什么</div>

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>不会写代码，也能 2 小时做出个人网站 — Rich · 豆子</title>
+  <meta name="description" content="参加阿里云×Intel×SoloNest 工作坊后，我用 AI 在 2 小时内完成了个人网站。最难的不是技术，而是内容。">
+  <meta name="theme-color" content="#f8f8fa">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>R</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap" rel="stylesheet">
+  <style>
+    /* ═══ Design Tokens ═══ */
+    :root {
+      --bg: #f8f8fa;
+      --surface: #ffffff;
+      --text: #1d1d1f;
+      --text2: #515157;
+      --muted: #8e8e93;
+      --line: rgba(0,0,0,0.07);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --font-display: 'Playfair Display', 'Noto Serif SC', 'Songti SC', 'STSong', Georgia, serif;
+      --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+      --card-shadow: 0 4px 24px rgba(0,0,0,0.04);
+      --card-shadow-hover: 0 12px 40px rgba(0,0,0,0.08);
+    }
+
+    /* ═══ Reset ═══ */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    ::selection { background: rgba(99,102,241,0.15); }
+
+    /* ═══ Background ═══ */
+    .bg-dots {
+      position: fixed; inset: 0; z-index: -1;
+      background-image: radial-gradient(circle, rgba(0,0,0,0.035) 0.7px, transparent 0.7px);
+      background-size: 22px 22px; pointer-events: none;
+    }
+
+    /* ═══ Header ═══ */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(248,248,250,0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid rgba(0,0,0,0.06);
+    }
+    header nav {
+      max-width: 720px; margin: 0 auto; padding: 0 40px;
+      height: 48px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--font-display); font-size: 20px; font-weight: 600;
+      letter-spacing: -0.02em; color: var(--text); text-decoration: none;
+    }
+    .back-link {
+      font-size: 12px; color: var(--muted); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 14px; border-radius: 980px;
+      border: 1px solid rgba(0,0,0,0.1);
+      transition: all 0.2s;
+    }
+    .back-link:hover { color: var(--text); border-color: rgba(0,0,0,0.25); }
+
+    /* ═══ Content Container ═══ */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ═══ Section Base ═══ */
+    .section {
+      padding: 100px 0;
+    }
+    .section-impact {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* ═══ Hero ═══ */
+    .hero {
+      padding: 140px 0 100px;
+      text-align: center;
+    }
+    .hero-badges {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .hero-badge {
+      font-size: 11px;
+      color: var(--muted);
+      padding: 4px 14px;
+      border-radius: 980px;
+      background: rgba(0,0,0,0.04);
+      letter-spacing: 0.02em;
+    }
+    .hero-badge.accent {
+      color: var(--accent);
+      background: rgba(99,102,241,0.08);
+    }
+    .hero-title {
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text2);
+      line-height: 1.6;
+      font-weight: 400;
+      margin-bottom: 40px;
+    }
+    .hero-line {
+      width: 32px;
+      height: 1px;
+      background: var(--line);
+      margin: 0 auto;
+    }
+
+    /* ═══ Big Impact Text ═══ */
+    .impact-text {
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.3;
+      color: var(--text);
+    }
+    .impact-text-lg {
+      font-size: 52px;
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.2;
+      color: var(--text);
+    }
+    .impact-text-muted {
+      font-size: 40px;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      color: var(--muted);
+    }
+
+    /* ═══ Question Section ═══ */
+    .question-number {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    .question-text {
+      font-size: 56px;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    /* ═══ Photo ═══ */
+    .photo-block {
+      margin: 40px 0;
+    }
+    .photo-block img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      display: block;
+    }
+    .photo-caption {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 12px;
+    }
+
+    /* ═══ Body Text ═══ */
+    .body-text {
+      font-size: 17px;
+      color: var(--text2);
+      line-height: 1.85;
+    }
+    .body-text + .body-text { margin-top: 16px; }
+
+    /* ═══ Highlight Stat ═══ */
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin: 40px 0;
+      box-shadow: var(--card-shadow);
+    }
+    .stat-number {
+      font-size: 64px;
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 16px;
+      color: var(--text2);
+      margin-top: 12px;
+      font-weight: 400;
+    }
+
+    /* ═══ Timeline ═══ */
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--line);
+    }
+    .timeline-step {
+      position: relative;
+      margin-bottom: 32px;
+    }
+    .timeline-step:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute;
+      left: -33px;
+      top: 24px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    }
+    .timeline-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 28px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.25s ease;
+    }
+    .timeline-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .timeline-step-label {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .timeline-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+    .timeline-desc {
+      font-size: 14px;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+
+    /* ═══ Section Label ═══ */
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .section-label::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: #c7c7cc;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      color: var(--text);
+      margin-bottom: 32px;
+    }
+
+    /* ═══ Code Block ═══ */
+    .code-container {
+      background: #1a1a1c;
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 32px 0;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .code-lang {
+      font-size: 11px;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .code-copy-btn {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      cursor: pointer;
+      padding: 3px 12px;
+      border-radius: 980px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: transparent;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .code-copy-btn:hover {
+      color: rgba(255,255,255,0.8);
+      border-color: rgba(255,255,255,0.25);
+    }
+    .code-body {
+      padding: 20px;
+      overflow-x: auto;
+    }
+    .code-body pre {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.8);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .code-body .comment { color: rgba(255,255,255,0.3); }
+    .code-body .keyword { color: #c792ea; }
+    .code-body .string { color: #c3e88d; }
+
+    /* ═══ Ending Section ═══ */
+    .ending-block {
+      text-align: center;
+      padding: 24px 0;
+    }
+    .ending-block + .ending-block {
+      margin-top: 16px;
+    }
+    .ending-colon {
+      font-size: 18px;
+      color: var(--muted);
+      margin-top: 48px;
+      letter-spacing: 0.5em;
+    }
+    .ending-final {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.2;
+      color: var(--text);
+      margin-top: 24px;
+    }
+
+    /* ═══ Poll Cards ═══ */
+    .poll-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 32px;
+    }
+    .poll-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+    .poll-card:hover {
+      background: #f5f5f7;
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow);
+    }
+    .poll-card-text {
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .poll-card-arrow {
+      color: var(--muted);
+      transition: transform 0.2s;
+    }
+    .poll-card:hover .poll-card-arrow {
+      transform: translateX(2px);
+      color: var(--text2);
+    }
+    .poll-cta {
+      text-align: center;
+      margin-top: 32px;
+      font-size: 15px;
+      color: var(--text2);
+    }
+
+    /* ═══ Separator ═══ */
+    .sep {
+      width: 32px;
+      height: 1px;
+      background: var(--line);
+      margin: 0 auto;
+    }
+
+    /* ═══ Footer ═══ */
+    footer {
+      padding: 40px 0;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* ═══ Toast ═══ */
+    .toast {
+      position: fixed;
+      bottom: 40px; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: #1d1d1f;
+      color: #f5f5f7;
+      padding: 8px 20px;
+      border-radius: 980px;
+      font-size: 13px;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ═══ Fade Animation ═══ */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94),
+                  transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.16s; }
+    .delay-3 { transition-delay: 0.24s; }
+    .delay-4 { transition-delay: 0.32s; }
+
+    /* ═══ Responsive ═══ */
+    @media (max-width: 768px) {
+      .container { padding: 0 24px; }
+      header nav { padding: 0 24px; }
+      .hero { padding: 110px 0 72px; }
+      .hero-title { font-size: 32px; }
+      .hero-subtitle { font-size: 16px; }
+      .section { padding: 72px 0; }
+      .section-impact { min-height: 60vh; }
+      .impact-text { font-size: 28px; }
+      .impact-text-lg { font-size: 36px; }
+      .impact-text-muted { font-size: 28px; }
+      .question-text { font-size: 36px; }
+      .stat-number { font-size: 44px; }
+      .section-title { font-size: 26px; }
+      .ending-final { font-size: 36px; }
+      .poll-grid { grid-template-columns: 1fr; }
+      .timeline { padding-left: 32px; }
+      .timeline::before { left: 11px; }
+      .timeline-dot { left: -27px; }
+      footer { margin: 0 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-dots" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header>
+    <nav>
+      <a href="../index.html" class="nav-brand">Rich</a>
+      <a href="../index.html#thinking" class="back-link">&larr; Writing</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ═══ Hero ═══ -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badges fade-up">
+          <span class="hero-badge">2026 年 6 月 28 日</span>
+          <span class="hero-badge">5 分钟阅读</span>
+          <span class="hero-badge accent">AI</span>
+          <span class="hero-badge accent">Personal Website</span>
+          <span class="hero-badge accent">Personal Branding</span>
+        </div>
+        <h1 class="hero-title fade-up delay-1">不会写代码，<br>也能 2 小时做出个人网站</h1>
+        <p class="hero-subtitle fade-up delay-2">我原来以为做网站很难，直到昨天我用了 AI。</p>
+        <div class="hero-line fade-up delay-3"></div>
+      </div>
+    </section>
+
+    <!-- ═══ Section 1: Why ═══ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label fade-up">缘起</div>
+        <h2 class="section-title fade-up delay-1">为什么开始做个人网站？</h2>
+        <p class="body-text fade-up delay-2">
+          昨天参加了阿里云 &times; Intel &times; SoloNest 联合举办的「一人公司 AI 实战工作坊」。到场大概 80 个人，开发者、设计师、产品经理、创业者都有。主办方的挑战很简单：用 AI，在 2 小时内做出你的个人网站。
+        </p>
+
+        <div class="photo-block fade-up">
+          <img src="../blog/images/img-42-workshop-group-photo.jpg" alt="一人公司 AI 实战工作坊合影" />
+          <div class="photo-caption">一人公司 AI 实战工作坊 · 现场合影</div>
+        </div>
+
+        <div class="stat-card fade-up">
+          <div class="stat-number">80 <span style="font-size: 32px; color: var(--text2); font-weight: 400;">人</span></div>
+          <div class="stat-label">2 小时，一大半人都完成了自己的个人网站</div>
+        </div>
+
+        <p class="body-text fade-up">
+          我原来以为做网站是个技术活儿——要学 HTML、CSS、JavaScript，要搞懂服务器、域名、部署。但昨天我发现，这些门槛已经被 AI 彻底抹平了。真正让我重新思考的，是另一个问题。
+        </p>
+      </div>
+    </section>
+
+    <div class="sep fade-up"></div>
+
+    <!-- ═══ Section 2: The Real Challenge ═══ -->
+    <section class="section section-impact">
+      <div class="container">
+        <div class="impact-text fade-up">
+          我发现最难的不是技术
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-impact">
+      <div class="container">
+        <div class="question-number fade-up">Question 01</div>
+        <div class="question-text fade-up delay-1">你是谁？</div>
+      </div>
+    </section>
+
+    <section class="section section-impact">
+      <div class="container">
+        <div class="question-number fade-up">Question 02</div>
+        <div class="question-text fade-up delay-1">你在做什么？</div>
+      </div>
+    </section>
+
+    <section class="section section-impact">
+      <div class="container">
+        <div class="question-number fade-up">Question 03</div>
+        <div class="question-text fade-up delay-1">为什么需要大家<br>认识你？</div>
+      </div>
+    </section>
+
+    <div class="sep fade-up"></div>
+
+    <!-- ═══ Section 3: Process ═══ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label fade-up">实践流程</div>
+        <h2 class="section-title fade-up delay-1">从 0 到上线，4 步搞定</h2>
+
+        <div class="timeline">
+
+          <div class="timeline-step fade-up">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-step-label">Step 1</div>
+              <div class="timeline-title">和 AI 一起梳理内容</div>
+              <div class="timeline-desc">先回答三个问题：你是谁、你在做什么、别人为什么要认识你。让 AI 帮你把脑子里的东西结构化地写出来——这才是最难的部分。</div>
+            </div>
+          </div>
+
+          <div class="timeline-step fade-up">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-step-label">Step 2</div>
+              <div class="timeline-title">让 AI 生成 HTML</div>
+              <div class="timeline-desc">把你整理好的内容喂给 AI，让它生成一个完整的单文件 HTML 页面。所有样式、排版、响应式适配都写在一个文件里。你不需要懂一行代码。</div>
+            </div>
+          </div>
+
+          <div class="timeline-step fade-up">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-step-label">Step 3</div>
+              <div class="timeline-title">GitHub 托管代码</div>
+              <div class="timeline-desc">注册一个 GitHub 账号，创建一个仓库，把你的 HTML 文件推上去。这是免费的，也是你代码的家。</div>
+            </div>
+          </div>
+
+          <div class="timeline-step fade-up">
+            <div class="timeline-dot"></div>
+            <div class="timeline-card">
+              <div class="timeline-step-label">Step 4</div>
+              <div class="timeline-title">Vercel 一键部署</div>
+              <div class="timeline-desc">用 Vercel 关联你的 GitHub 仓库，选好目录，点一下 Deploy。30 秒后你就有了一个 https 的在线地址，可以发给任何人。</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="sep fade-up"></div>
+
+    <!-- ═══ Section 4: My Prompt ═══ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label fade-up">我的 Prompt</div>
+        <h2 class="section-title fade-up delay-1">我是怎么让 AI 帮我做网站的</h2>
+        <p class="body-text fade-up delay-2">
+          下面是我给 AI 的核心提示词。思路是先让 AI 理解我想表达什么，再让它帮我生成页面。你可以根据自己的内容替换其中的部分。
+        </p>
+
+        <div class="code-container fade-up">
+          <div class="code-header">
+            <span class="code-lang">Prompt</span>
+            <button class="code-copy-btn" onclick="copyCode('prompt1')">复制</button>
+          </div>
+          <div class="code-body">
+            <pre id="prompt1"><span class="comment">// 占位：后续填入完整 Prompt</span>
+<span class="comment">// 你可以把自己的 Prompt 粘贴在这里</span>
+
+请帮我创建一个个人网站，要求如下：
+
+<span class="keyword">角色：</span>我是一个 [你的职业/身份]，目前在做 [你正在做的事]。
+
+<span class="keyword">风格：</span>
+- Apple / Linear 风格，浅色主题
+- 大量留白，克制、轻盈
+- 移动端友好
+
+<span class="keyword">页面结构：</span>
+1. 首屏：我的名字 + 一句话介绍
+2. 关于我：我的背景和经历
+3. 我在做什么：当前项目
+4. 联系方式：邮箱和社交媒体
+
+<span class="keyword">内容：</span>
+[粘贴你梳理好的个人内容]</pre>
+          </div>
+        </div>
+
+        <p class="body-text fade-up" style="font-size: 14px; color: var(--muted);">
+          完整的 Prompt 会在下一篇详细展开，包括如何迭代样式、处理响应式、添加动画效果等。
+        </p>
+      </div>
+    </section>
+
+    <div class="sep fade-up"></div>
+
+    <!-- ═══ Section 5: Ending ═══ -->
+    <section class="section section-impact" style="min-height: 90vh;">
+      <div class="container">
+        <div class="ending-block fade-up">
+          <div class="impact-text">工具越来越便宜。</div>
+        </div>
+        <div class="ending-block fade-up delay-1">
+          <div class="impact-text-lg">内容越来越昂贵。</div>
+        </div>
+        <div class="ending-block fade-up delay-2" style="margin-top: 48px;">
+          <div class="impact-text-muted">网站只是载体。</div>
+        </div>
+        <div class="ending-colon fade-up delay-3">真正重要的是</div>
+        <div class="ending-final fade-up delay-4">你脑子里到底装着什么。</div>
+      </div>
+    </section>
+
+    <div class="sep fade-up"></div>
+
+    <!-- ═══ Section 6: Poll ═══ -->
+    <section class="section">
+      <div class="container">
+        <div class="section-label fade-up">Next</div>
+        <h2 class="section-title fade-up delay-1">下一篇你想看什么？</h2>
+
+        <div class="poll-grid fade-up delay-2">
+          <div class="poll-card" onclick="votePoll(this)">
+            <span class="poll-card-text">完整 Prompt 分享</span>
+            <span class="poll-card-arrow">&rarr;</span>
+          </div>
+          <div class="poll-card" onclick="votePoll(this)">
+            <span class="poll-card-text">GitHub 详细教程</span>
+            <span class="poll-card-arrow">&rarr;</span>
+          </div>
+          <div class="poll-card" onclick="votePoll(this)">
+            <span class="poll-card-text">Vercel 部署教程</span>
+            <span class="poll-card-arrow">&rarr;</span>
+          </div>
+          <div class="poll-card" onclick="votePoll(this)">
+            <span class="poll-card-text">网站内容怎么写</span>
+            <span class="poll-card-arrow">&rarr;</span>
+          </div>
+        </div>
+
+        <p class="poll-cta fade-up delay-3">欢迎评论区告诉我。</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Rich &middot; <a href="../index.html" style="color: var(--muted); text-decoration: none;">返回首页</a></p>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Scripts -->
+  <script>
+    // Intersection Observer for fade-up animations
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+    // Copy code block
+    function copyCode(id) {
+      const el = document.getElementById(id);
+      const text = el.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('已复制到剪贴板');
+      });
+    }
+
+    // Poll card interaction
+    function votePoll(card) {
+      const allCards = card.parentElement.querySelectorAll('.poll-card');
+      allCards.forEach(c => {
+        c.style.background = 'rgba(0,0,0,0.04)';
+        c.style.borderColor = 'var(--line)';
+      });
+      card.style.background = 'rgba(99,102,241,0.08)';
+      card.style.borderColor = 'var(--accent)';
+      const text = card.querySelector('.poll-card-text').textContent;
+      showToast('已选择：' + text);
+    }
+
+    // Toast notification
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+  </script>
+</body>
+</html>
