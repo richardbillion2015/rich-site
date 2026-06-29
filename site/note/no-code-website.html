@@ -467,6 +467,45 @@
       color: var(--text2);
     }
 
+    /* ═══ Cost ═══ */
+    .cost-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .cost-item {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--card-shadow);
+    }
+    .cost-name {
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .cost-price {
+      font-size: 15px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .cost-price.paid {
+      color: var(--text2);
+      font-weight: 400;
+      font-size: 13px;
+    }
+    .small-note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-top: 8px;
+    }
+
     /* ═══ Toast ═══ */
     .toast {
       position: fixed;
@@ -511,6 +550,7 @@
       .section-title { font-size: 24px; }
       .ending-final { font-size: 36px; }
       .poll-grid { grid-template-columns: 1fr; }
+      .cost-grid { grid-template-columns: 1fr; }
       .timeline { padding-left: 32px; }
       .timeline::before { left: 11px; }
       .timeline-dot { left: -27px; }
@@ -536,7 +576,7 @@
   <a href="../index.html#thinking" class="float-back">&larr; Writing</a>
 
   <!-- Slide Progress -->
-  <div class="slide-progress" id="slideProgress">1 / 10</div>
+  <div class="slide-progress" id="slideProgress">1 / 11</div>
 
   <main id="mainScroll">
 
@@ -605,7 +645,7 @@
     <section class="slide slide-alt">
       <div class="container" style="text-align: center;">
         <div class="question-number fade-up">Question 03</div>
-        <div class="question-text fade-up delay-1">为什么需要大家<br>认识你？</div>
+        <div class="question-text fade-up delay-1">别人为什么要认识你？</div>
       </div>
     </section>
 
@@ -651,7 +691,35 @@
       </div>
     </section>
 
-    <!-- ═══ Slide 8: Prompt ═══ -->
+    <!-- ═══ Slide 8: Cost ═══ -->
+    <section class="slide slide-alt">
+      <div class="container content-slide">
+        <div class="section-label fade-up">成本</div>
+        <h2 class="section-title fade-up delay-1">花了多少钱？</h2>
+        <div class="cost-grid fade-up delay-2">
+          <div class="cost-item">
+            <span class="cost-name">QoderWork</span>
+            <span class="cost-price">0 元</span>
+          </div>
+          <div class="cost-item">
+            <span class="cost-name">GitHub</span>
+            <span class="cost-price">0 元</span>
+          </div>
+          <div class="cost-item">
+            <span class="cost-name">Vercel</span>
+            <span class="cost-price">0 元</span>
+          </div>
+          <div class="cost-item">
+            <span class="cost-name">域名（可选）</span>
+            <span class="cost-price paid">几十 ~ 几百元 / 年</span>
+          </div>
+        </div>
+        <p class="small-note fade-up">有条件强烈建议学习 Codex，但是需要魔法。我这次用的 QoderWork 感觉也蛮好用的。</p>
+        <p class="small-note fade-up">国产 AI 一般最多半年就会赶上最先进的功能，完全不用焦虑。</p>
+      </div>
+    </section>
+
+    <!-- ═══ Slide 9: Prompt ═══ -->
     <section class="slide slide-alt">
       <div class="container content-slide">
         <div class="section-label fade-up">我的 Prompt</div>
@@ -665,25 +733,28 @@
             <button class="code-copy-btn" onclick="copyCode('prompt1')">复制</button>
           </div>
           <div class="code-body">
-            <pre id="prompt1"><span class="comment">// 占位：后续填入完整 Prompt</span>
+            <pre id="prompt1">请帮我创建一个个人网站，单文件 HTML，所有代码写在一个文件里。
 
-请帮我创建一个个人网站，要求如下：
-
-<span class="keyword">角色：</span>我是一个 [你的职业/身份]，目前在做 [你正在做的事]。
-
-<span class="keyword">风格：</span>
-- Apple / Linear 风格，浅色主题
-- 大量留白，克制、轻盈
-- 移动端友好
+<span class="keyword">关于我：</span>
+我叫 [你的名字]，做了 [X] 年 [职业/领域]，现在在 [你正在做的事]。
+我相信 [一句你相信的话]。
 
 <span class="keyword">页面结构：</span>
-1. 首屏：我的名字 + 一句话介绍
-2. 关于我：背景和经历
-3. 我在做什么：当前项目
-4. 联系方式：邮箱和社交媒体
+1. 首屏：大字名字 + 一句话 tagline（中文斜杠风格，如：产品人 / AI 探索者 / 终身学习）
+2. 关于我：3 个卡片，分别是「做过」「在做」「相信」
+3. 我在做什么：2-3 个当前项目的卡片
+4. 联系方式：邮箱 + 微信 + GitHub
 
-<span class="keyword">内容：</span>
-[粘贴你梳理好的个人内容]</pre>
+<span class="keyword">设计风格：</span>
+- Apple / Linear 风格，浅色主题
+- 大量留白，字体偏细，正文用灰色不是纯黑
+- 卡片圆角，hover 时轻微上浮 + 阴影
+- 移动端自适应
+
+请直接输出完整的 HTML 文件，我可以保存后直接在浏览器打开。
+
+<span class="keyword">以下是我的个人信息，请替换上面的占位符：</span>
+[在这里粘贴你的具体介绍，越详细越好]</pre>
           </div>
         </div>
       </div>
